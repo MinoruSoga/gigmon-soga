@@ -29,7 +29,7 @@ class GptStreamController extends Controller
             ini_set('output_buffering', 'off'); 
             
             header('Transfer-Encoding: chunked');
-            fastcgi_finish_request();
+            // fastcgi_finish_request();
         }
         // Get POST parameter
         $message = $request->message;
@@ -113,7 +113,7 @@ class GptStreamController extends Controller
                 // echo 'data: ' . $text;
                 // echo "\n\n";
                 echo $text;
-                ob_flush();
+                // ob_flush();
                 flush();
             }
             $user_input->response_length = mb_strlen($fullResponseText);
@@ -160,7 +160,7 @@ class GptStreamController extends Controller
             // echo "event: update\n";
             // echo 'data: <END_STREAMING_SSE>';
             // echo "\n\n";
-            ob_flush();
+            // ob_flush();
             flush();
         }, 200, [
             'Cache-Control' => 'no-cache',

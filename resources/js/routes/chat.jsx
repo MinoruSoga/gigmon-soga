@@ -36,8 +36,8 @@ export default function Chat(props) {
       window.scrollBy(0, -1);
 
       const checkMessageHeaders = {
-        Content_Type: "application/json",
-        X_CSRF_TOKEN: csrfToken,
+        "Content-Type": "application/json",
+        "X-Csrf-Token": csrfToken,
       };
 
       // Remove spaces and new lines from both inputMessage and editedItem.description
@@ -122,8 +122,8 @@ export default function Chat(props) {
       url += `stream`;
     }
     const headers = {
-      Content_Type: "application/json",
-      X_CSRF_TOKEN: csrfToken,
+      "Content-Type": "application/json",
+      "X-Csrf-Token": csrfToken,
     };
 
     let data = {
@@ -316,7 +316,7 @@ export default function Chat(props) {
       const response = await fetch(`/api/history/${mode}`, {
         method: "GET",
         headers: {
-          "X-CSRF-TOKEN": csrfToken,
+          "X-Csrf-Token": csrfToken,
         },
       });
       const data = await response.json();
