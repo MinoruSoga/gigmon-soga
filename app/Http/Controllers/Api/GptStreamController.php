@@ -5,21 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-
 use App\Models\Conversation;
 use App\Models\UserInput;
-use App\Models\GPTFunction;
-use App\Models\ProhibitedWord;
 use App\Models\ConversationInfo;
-
 use OpenAI\Laravel\Facades\OpenAI;
-
-use Symfony\Component\HttpFoundation\StreamedResponse; // 追加
-use Illuminate\Support\Facades\Cache;
 
 class GptStreamController extends Controller
 {
@@ -43,14 +33,10 @@ class GptStreamController extends Controller
             $model = 'gpt-4';
         }
 
-        // Get ChatGPT API's key from env
-        $apiKey = env('CHATGPT_API_KEY');
-
         //\Log::info('index method called');
 
         // Check conversationId
         if (!$conversationToken) {
-            // Create conversationId
             $conversationToken = (string)Str::uuid();
             //\Log::info('Generated new conversation token: ' . $conversationToken);
         } else {
@@ -90,17 +76,7 @@ class GptStreamController extends Controller
 
         return response()->stream(function () use ($data, $user_input, $conversationToken, $conversationInfo, $functionId, $model, $prompt, $message) {
             $stream = OpenAI::chat()->createStreamed($data);
-            $fullResponseText = "";  // この変数に応答テキスト全体を保存します
-             // Send initial data
-            // $initialData = [
-            //     'status' => 'success',
-            //     'conversationToken' => $conversationToken
-            // ];
-            // echo "event: initData\n";
-            // echo 'data: ' . json_encode($initialData);
-            // echo "\n\n";
-            // ob_flush();
-            // flush();
+            $fullResponseText = "";
 
             foreach ($stream as $response) {
                 $text = $response->choices[0]->delta->content;
@@ -109,13 +85,13 @@ class GptStreamController extends Controller
                 }
                 $fullResponseText .= $text;
 
-                // echo "event: update\n";
-                // echo 'data: ' . $text;
-                // echo "\n\n";
                 echo $text;
-                // ob_flush();
+                if (ob_get_level() > 0) {
+                    ob_flush();
+                }
                 flush();
             }
+
             $user_input->response_length = mb_strlen($fullResponseText);
             $user_input->save();
             // Save conversation data to DB with the full response text
@@ -131,7 +107,7 @@ class GptStreamController extends Controller
             }
 
             // Save conversation data to DB
-            $conversation = Conversation::create([
+            Conversation::create([
                 'conversation_token' => $conversationToken,
                 'conversation_system_id' => 1,      // ChatGPT
                 'user_id' => Auth::user()->id,
@@ -143,25 +119,7 @@ class GptStreamController extends Controller
                 'model' => $model
             ]);
 
-            // if ($function) {
-            //     $function_conversation = Conversation::create([
-            //         'conversation_token' => $conversationToken,
-            //         'conversation_system_id' => 1,      // ChatGPT
-            //         'user_id' => Auth::user()->id,
-            //         'role' => 'function',
-            //         'message' => '',
-            //         'prompt' => $function['prompt'],
-            //         'response' => $function['response'],
-            //         'function_id' => $functionId,
-            //         'model' => $used_model
-            //     ]);
-            //     $response = $function['response'];
-            // }
-            // echo "event: update\n";
-            // echo 'data: <END_STREAMING_SSE>';
-            // echo "\n\n";
-            // ob_flush();
-            flush();
+            // flush();
         }, 200, [
             'Cache-Control' => 'no-cache',
             'X-Accel-Buffering' => 'no',
