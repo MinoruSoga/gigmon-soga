@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-    </head>
-    <body>
-        <h1>ChatBot</h1>
-        {{-- <script type="text/javascript">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>ChatBot</h1>
+    {{-- <script type="text/javascript">
             var i = "ws://127.0.0.1:6001/chat", l = new WebSocket(i);
 
             l.onopen = function (e) {
@@ -24,8 +26,8 @@
 
 
 
-        {{-- ============================== DocsBotをChatBotに名前変換 ============================== --}}
-        {{-- <script type="text/javascript">
+    {{-- ============================== DocsBotをChatBotに名前変換 ============================== --}}
+    <!-- <script type="text/javascript">
             (window.ChatBotAI = window.ChatBotAI || {}),
                 (ChatBotAI.init = function (c) {
                     return new Promise(function (e, o) {
@@ -33,7 +35,7 @@
                         (t.type = "text/javascript"),
                             (t.async = !0),
                             (t.src =
-                                "http://127.0.0.1:8000/api/get-chatbot-script");
+                                "http://127.0.0.1:8080/api/get-chatbot-script");
                         var n = document.getElementsByTagName("script")[0];
                         n.parentNode.insertBefore(t, n),
                             t.addEventListener("load", function () {
@@ -72,10 +74,10 @@
         </script>
         <script type="text/javascript">
             ChatBotAI.init({ id: "pvm7mtdki61Tq0Tc0jaO/FQXVtHigraERCEI1ge83" });
-        </script> --}}
+        </script> -->
 
-        {{-- ============================== 純正のDocsBot ============================== --}}
-        {{-- <script>
+    {{-- ============================== 純正のDocsBot ============================== --}}
+    <script>
             window.DocsBotAI = window.DocsBotAI || {};
             DocsBotAI.init = function(c) {
                 return new Promise(function(e,o){
@@ -109,6 +111,7 @@
                 });
             };
             DocsBotAI.init({id: "pvm7mtdki61Tq0Tc0jaO/FQXVtHigraERCEI1ge83"});
-        </script> --}}
-    </body>
+        </script>
+</body>
+
 </html>
